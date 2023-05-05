@@ -1,0 +1,28 @@
+#kubectl run app1 --image=nginx --labels="app=app1" --expose --port=80
+#kubectl run app2 --image=nginx --labels="app=app2" --expose --port=80
+
+# Deny all egress traffic from all pod within ns space
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: deny-egress-resolve-dns
+  namespace: default
+spec:
+  podSelector:
+    matchLabels:
+      app: app1
+  policyTypes:
+  - Egress
+  egress:
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: kube-system
+    - podSelector:
+        matchLabels:
+          k8s-app: kube-dns
+    ports:
+      - protocol: TCP
+        port: 53
+      - protocol: UDP
+        port: 53
