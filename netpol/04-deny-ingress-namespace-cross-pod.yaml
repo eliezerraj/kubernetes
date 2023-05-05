@@ -4,8 +4,7 @@
 #kubectl run app2 --image=nginx --labels="app=app2" --expose --port=80
 #kubectl run app3 --image=nginx --labels="app=app3" --namespace3 --expose --port=80
 
-# Deny all ingress to all pod in namespace default
-
+# Deny all ingress from another ns to all pods within ns default, but pos in ns default can be ingress each others
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
