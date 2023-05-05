@@ -1,0 +1,19 @@
+kubectl run app1-back --image=nginx --labels="app=app1,tier=backend" --expose --port=80
+kubectl run app1-front --image=nginx --labels="app=app1,tier=frontend" --expose --port=80
+kubectl run app2-db --image=nginx --labels="app=app2,tier=database" --expose --port=80
+
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: app1-limit-network
+spec:
+  podSelector:
+    matchLabels:
+      app: app1
+      tier: backend
+  ingress:
+    - from:
+      - podSelector:
+          matchLabels:
+            app: app1
+
